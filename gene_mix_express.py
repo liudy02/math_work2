@@ -44,6 +44,7 @@ def recur_rand(num_time, inf=0):
 
 def rand_a_node(node, num_list, lv=0):
 
+    print(node.expr + "开始")
     inf = 0
     sup = max_num
     if lv < 0:
@@ -120,6 +121,9 @@ def rand_a_node(node, num_list, lv=0):
             pre_lv = min(-1, lv - 1)
             while True:
                 rand_a_node(node.left_ele, num_list, pre_lv)
+                if node.left_ele.eval(num_list) < 1:
+                    continue
+                # print("分解数字:" + str(node.left_ele.eval(num_list)))
                 pre_divisors = decomp_num(node.left_ele.eval(num_list))
                 if len(pre_divisors) >= 4 - min(lv, 0):
                     break
@@ -182,6 +186,7 @@ def rand_a_node(node, num_list, lv=0):
 
             if inf < val < sup or randint(0, 9) == 0:
                 break
+    print(node.expr + "结束")
 
 
 if __name__ == "__main__":
