@@ -152,9 +152,13 @@ class ArithmeticNode:
 
     def eval(self, num_list):
 
-        if len(num_list) != self.end_num:
-            raise ValueError("给出的数字数与字符长度不符")
+        if len(num_list) < self.end_num:
+            raise ValueError("给出的数字数不够代入计算!")
         expr = self.expr.format(*num_list)
+        val = eval(expr)
+        if int(val) == val:
+            val = int(val)
+        return val
         print(eval(expr))
 
 
