@@ -8,6 +8,10 @@ Email:      liuduanyangwj@qq.om
 time:       2023/3/1  14:26
 IDE:        PyCharm
 """
+op_dict = {"+": -1,
+           "-": -2,
+           "*": -3,
+           "/": -4}
 
 
 class ArithmeticNode:
@@ -27,20 +31,22 @@ class ArithmeticNode:
         self.inv_expr = ""
         self.next = None
         self.pre = []
-        self.left_type = "num"
-        self.right_type = "num"
+        # 若左侧/右侧是数字, 则self.left_type/self.right_type是数字编号, 否则代表的左侧/右侧最后一步的计算种类
+        # -1: 加法; -2: 减法; -3: 乘法, -4: 除法
+        self.left_type = 0
+        self.right_type = 0
 
         if isinstance(left_ele, self.__class__):
             self.pre.append(left_ele)
             self.start_num = max(self.start_num, left_ele.end_num)
             self.idx_list.extend(left_ele.idx_list)
-            self.left_type = "expr"
+            self.left_type = op_dict[left_ele.op]
             self.op_list.extend(left_ele.op_list)
         if isinstance(right_ele, self.__class__):
             self.pre.append(right_ele)
             self.start_num = max(self.start_num, right_ele.end_num)
             self.idx_list.extend(right_ele.idx_list)
-            self.right_type = "expr"
+            self.right_type = op_dict[right_ele.op]
             self.op_list.extend(right_ele.op_list)
         self.end_num = self.start_num
         self.op_list.append(self.op)
@@ -57,11 +63,13 @@ class ArithmeticNode:
         if not isinstance(self.left_ele, self.__class__):
             left_str = f"{{{self.end_num}}}"
             i_left_str = left_str
+            self.left_type = self.end_num
             self.end_num += 1
 
         if not isinstance(self.right_ele, self.__class__):
             right_str = f"{{{self.end_num}}}"
             i_right_str = right_str
+            self.right_type = self.end_num
             self.end_num += 1
 
         if self.op == "+":
