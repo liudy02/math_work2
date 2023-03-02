@@ -124,12 +124,13 @@ def rand_a_node(node, num_list, lv=0):
                 if node.left_ele.eval(num_list) < 1:
                     continue
                 # print("分解数字:" + str(node.left_ele.eval(num_list)))
-                pre_divisors = decomp_num(node.left_ele.eval(num_list))
-                if len(pre_divisors) >= 4 - min(lv, 0):
+                prime_divisors = decomp_num(node.left_ele.eval(num_list))
+                if len(prime_divisors) >= 4 - min(lv, 0):
                     break
             while True:
-                num_factor = randint(0, len(pre_divisors))
-                selected_factors = sample(pre_divisors, num_factor)
+                # noinspection PyUnboundLocalVariable
+                num_factor = randint(0, len(prime_divisors))
+                selected_factors = sample(prime_divisors, num_factor)
                 num_list[node.right_type] = int(np.product(np.array(selected_factors)))
                 val = node.eval(num_list)
                 if val < 0 or val > max_res:

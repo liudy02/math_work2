@@ -8,6 +8,9 @@ Email:      liuduanyangwj@qq.om
 time:       2023/3/1  14:26
 IDE:        PyCharm
 """
+import fractions
+
+
 op_dict = {"+": -1,
            "-": -2,
            "*": -3,
@@ -150,16 +153,22 @@ class ArithmeticNode:
         expr = self.expr.format(*num_list).replace("*", "×").replace("/", "÷") + "="
         return expr
 
-    def eval(self, num_list):
+    def eval(self, num_list, is_all_int=True):
 
         if len(num_list) < self.end_num:
             raise ValueError("给出的数字数不够代入计算!")
-        expr = self.expr.format(*num_list)
+        if is_all_int:
+            frac_num_list = []
+            for num in num_list:
+                frac_num_list.append(fractions.Fraction(num, 1))
+            expr = self.expr.format(*frac_num_list)
+        else:
+            expr = self.expr.format(*num_list)
         val = eval(expr)
         if int(val) == val:
             val = int(val)
         return val
-        print(eval(expr))
+        # print(eval(expr))
 
 
 if __name__ == "__main__":
