@@ -8,6 +8,7 @@ from arithmetic_link_list import ArithmeticLinkList
 op_list = ["+", "-", "*", "/"]
 max_num = 50
 max_res = 50
+max_try = 100000
 recur_rand_time = int(math.log(max_num)) - 1
 delta = 10 ** int(math.log10(max_num - 1))
 int_list = []
@@ -42,7 +43,7 @@ def recur_rand(num_time, inf=0):
     return num
 
 
-def rand_a_node(node, num_list, lv=0):
+def rand_a_node(node, num_list, lv=0, num_try=0):
 
     print(node.expr + "开始")
     inf = 0
@@ -54,6 +55,9 @@ def rand_a_node(node, num_list, lv=0):
 
     if "*" not in node.op_list and "/" not in node.op_list:
         while True:
+            num_try += 1
+            if num_try > max_try:
+                raise ValueError(f"已经尝试生成超过{max_try}次了!")
             for idx in node.idx_list:
                 num_list[idx] = rand_a_int()
             # 即便计算结果不符合范围条件, 仍然有10%的几率通过
@@ -67,6 +71,9 @@ def rand_a_node(node, num_list, lv=0):
 
         if node.left_type >= 0 and node.right_type >= 0:
             while True:
+                num_try += 1
+                if num_try > max_try:
+                    raise ValueError(f"已经尝试生成超过{max_try}次了!")
                 # num_list[node.left_type] = recur_rand(recur_rand_time)
                 num_list[node.right_type] = recur_rand(recur_rand_time, 0)
                 num_list[node.left_type] = rand_a_int(sup=max_res // max(num_list[node.right_type], 1))
@@ -82,7 +89,10 @@ def rand_a_node(node, num_list, lv=0):
             pre_node = node.pre[0]
             pre_lv = max(1, lv + 1)
             while True:
-                rand_a_node(pre_node, num_list, pre_lv)
+                num_try += 1
+                if num_try > max_try:
+                    raise ValueError(f"已经尝试生成超过{max_try}次了!")
+                num_try = rand_a_node(pre_node, num_list, pre_lv, num_try)
                 num_list[idx] = rand_a_int(sup=max_res // max(pre_node.eval(num_list), 1))
                 val = node.eval(num_list)
                 if val < 0 or val > max_res:
@@ -94,8 +104,11 @@ def rand_a_node(node, num_list, lv=0):
         else:
             pre_lv = max(1, lv + 1)
             while True:
-                rand_a_node(node.left_ele, num_list, pre_lv)
-                rand_a_node(node.right_ele, num_list, pre_lv)
+                num_try += 1
+                if num_try > max_try:
+                    raise ValueError(f"已经尝试生成超过{max_try}次了!")
+                num_try = rand_a_node(node.left_ele, num_list, pre_lv, num_try)
+                num_try = rand_a_node(node.right_ele, num_list, pre_lv, num_try)
                 val = node.eval(num_list)
                 if val < 0 or val > max_res:
                     continue
@@ -107,6 +120,9 @@ def rand_a_node(node, num_list, lv=0):
 
         if node.left_type >= 0 and node.right_type >= 0:
             while True:
+                num_try += 1
+                if num_try > max_try:
+                    raise ValueError(f"已经尝试生成超过{max_try}次了!")
                 num_list[node.right_type] = recur_rand(recur_rand_time, 1)
                 res_factor = rand_a_int(sup=max_num // num_list[node.right_type])
                 num_list[node.left_type] = num_list[node.right_type] * res_factor
@@ -120,7 +136,10 @@ def rand_a_node(node, num_list, lv=0):
         elif node.left_type < 0 <= node.right_type:
             pre_lv = min(-1, lv - 1)
             while True:
-                rand_a_node(node.left_ele, num_list, pre_lv)
+                num_try += 1
+                if num_try > max_try:
+                    raise ValueError(f"已经尝试生成超过{max_try}次了!")
+                num_try = rand_a_node(node.left_ele, num_list, pre_lv, num_try)
                 if node.left_ele.eval(num_list) < 1:
                     continue
                 # print("分解数字:" + str(node.left_ele.eval(num_list)))
@@ -128,6 +147,9 @@ def rand_a_node(node, num_list, lv=0):
                 if len(prime_divisors) >= 4 - min(lv, 0):
                     break
             while True:
+                num_try += 1
+                if num_try > max_try:
+                    raise ValueError(f"已经尝试生成超过{max_try}次了!")
                 # noinspection PyUnboundLocalVariable
                 num_factor = randint(0, len(prime_divisors))
                 selected_factors = sample(prime_divisors, num_factor)
@@ -141,7 +163,10 @@ def rand_a_node(node, num_list, lv=0):
         elif node.right_type < 0 <= node.left_type:
             pre_lv = min(-1, lv - 1)
             while True:
-                rand_a_node(node.right_ele, num_list, pre_lv)
+                num_try += 1
+                if num_try > max_try:
+                    raise ValueError(f"已经尝试生成超过{max_try}次了!")
+                num_try = rand_a_node(node.right_ele, num_list, pre_lv, num_try)
                 if node.right_ele.eval(num_list) == 0:
                     continue
                 res_factor = rand_a_int(sup=max_num // max(node.right_ele.eval(num_list), 1))
@@ -156,27 +181,36 @@ def rand_a_node(node, num_list, lv=0):
         else:
             pre_lv = min(-1, lv - 1)
             while True:
-                rand_a_node(node.right_ele, num_list, pre_lv)
+                num_try += 1
+                if num_try > max_try:
+                    raise ValueError(f"已经尝试生成超过{max_try}次了!")
+                num_try = rand_a_node(node.right_ele, num_list, pre_lv, num_try)
                 right_val = node.right_ele.eval(num_list)
                 if 0 < right_val <= int(max_num ** 0.5):
                     if right_val > 1 or randint(0, 9) == 0:
                         break
             while True:
-                rand_a_node(node.left_ele, num_list, pre_lv)
+                num_try += 1
+                if num_try > max_try:
+                    raise ValueError(f"已经尝试生成超过{max_try}次了!")
+                num_try = rand_a_node(node.left_ele, num_list, pre_lv, num_try)
                 left_val = node.left_ele.eval(num_list)
                 if left_val % right_val == 0:
                     if 1 < left_val // right_val or randint(0, 9) == 0:
                         break
     else:
         while True:
+            num_try += 1
+            if num_try > max_try:
+                raise ValueError(f"已经尝试生成超过{max_try}次了!")
             if node.left_type < 0:
-                rand_a_node(node.left_ele, num_list, lv)
+                num_try = rand_a_node(node.left_ele, num_list, lv, num_try)
                 # left_val = node.left_ele.eval(num_list)
             else:
                 num_list[node.left_type] = rand_a_int()
 
             if node.right_type < 0:
-                rand_a_node(node.right_ele, num_list, lv)
+                num_try = rand_a_node(node.right_ele, num_list, lv, num_try)
                 # right_val = node.right_ele.eval(num_list)
             else:
                 num_list[node.right_type] = rand_a_int()
@@ -188,6 +222,7 @@ def rand_a_node(node, num_list, lv=0):
             if inf < val < sup or randint(0, 9) == 0:
                 break
     print(node.expr + "结束")
+    return num_try
 
 
 if __name__ == "__main__":
