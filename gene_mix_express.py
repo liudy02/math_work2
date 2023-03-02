@@ -39,13 +39,13 @@ def recur_rand(num_time, inf=0):
     num = max_num
     for idx in range(num_time):
         num = rand_a_int(inf, sup=num)
-        print(num)
+        # print(num)
     return num
 
 
 def rand_a_node(node, num_list, lv=0, num_try=0):
 
-    print(node.expr + "开始")
+    # print(node.expr + "开始")
     inf = 0
     sup = max_num
     if lv < 0:
@@ -221,7 +221,7 @@ def rand_a_node(node, num_list, lv=0, num_try=0):
 
             if inf < val < sup or randint(0, 9) == 0:
                 break
-    print(node.expr + "结束")
+    # print(node.expr + "结束")
     return num_try
 
 

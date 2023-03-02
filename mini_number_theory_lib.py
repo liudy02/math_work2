@@ -1935,6 +1935,7 @@ prime_str_1e6 = """
 """
 prime_list = [int(item) for item in prime_str_1e6.replace('\n', ' ').split()]
 
+
 def decomp_num_once(n):
 
     if n == 1:
@@ -1947,6 +1948,7 @@ def decomp_num_once(n):
 
     return n, 1
 
+
 def decomp_num(n):
     res_list = []
     n2 = n
@@ -1956,6 +1958,7 @@ def decomp_num(n):
         if n2 == 1:
             break
     return res_list
+
 
 def get_all_divisor(n):
     prime_divisors = decomp_num(n)

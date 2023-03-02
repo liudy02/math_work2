@@ -33,11 +33,11 @@ class ArithmeticLinkList:
             self.op_list = a_node.op_list
             self.end_num += 2
             self.tail = a_node
-            self.headers.append(a_node)
-            print(a_node.expr)
-            print(a_node.op)
-            print(a_node.op_list)
-            print(self.op_list)
+            # self.headers.append(a_node)
+            # print(a_node.expr)
+            # print(a_node.op)
+            # print(a_node.op_list)
+            # print(self.op_list)
 
         if self.num_op >= 2:
             is_binary = randint(0, 1)
@@ -57,15 +57,15 @@ class ArithmeticLinkList:
                 self.end_num += 1
                 self.tail = a_node
                 self.headers.extend(a_tree.headers)
-                a_tree.tail.next = a_node
-                print(a_node.expr)
-                print(a_node.op)
-                print(a_node.op_list)
-                print(self.op_list)
+                # a_tree.tail.next = a_node
+                # print(a_node.expr)
+                # print(a_node.op)
+                # print(a_node.op_list)
+                # print(self.op_list)
             else:
                 num_left = randint(1, self.num_op - 2)
                 num_right = self.num_op - 1 - num_left
-                print(self.num_op, num_left, num_right)
+                # print(self.num_op, num_left, num_right)
                 left_tree = ArithmeticLinkList(num_left, self.end_num)
                 self.end_num = left_tree.end_num
                 right_tree = ArithmeticLinkList(num_right, self.end_num)
@@ -81,10 +81,10 @@ class ArithmeticLinkList:
                 self.headers.extend(right_tree.headers)
                 left_tree.tail.next = a_node
                 right_tree.tail.next = a_node
-                print(a_node.expr)
-                print(a_node.op)
-                print(a_node.op_list)
-                print(self.op_list)
+                # print(a_node.expr)
+                # print(a_node.op)
+                # print(a_node.op_list)
+                # print(self.op_list)
 
 
 if __name__ == "__main__":
