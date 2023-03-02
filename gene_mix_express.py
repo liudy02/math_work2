@@ -225,12 +225,19 @@ def rand_a_node(node, num_list, lv=0, num_try=0):
     return num_try
 
 
+def gene_express(num_op):
+    while True:
+        try:
+            link_list = ArithmeticLinkList(num_op)
+            num_list = list(range(num_op + 1))
+            rand_a_node(link_list.tail, num_list)
+        except ValueError:
+            continue
+        break
+    # noinspection PyUnboundLocalVariable
+    return link_list.tail.get_human_expr(num_list), link_list.tail.eval(num_list)
+
+
 if __name__ == "__main__":
-    a = ArithmeticLinkList(6)
-    t = a.tail
-    nl = list(range(7))
-    rand_a_node(a.tail, nl, 0)
-    print(t.expr)
-    print(t.get_human_expr(nl))
-    print(t.eval(nl))
+    print(gene_express(6))
     pass

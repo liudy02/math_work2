@@ -69,7 +69,7 @@ class ConfigWindow(QDialog):
         self.questionNum=30
         #self.minNum=None
         self.maxNum=None
-        self.max_mix = 6
+        self.max_mix = 5
         self.testMethod=0
         self.initUI()
 
@@ -177,7 +177,7 @@ class Window(QMainWindow):
         self.testMethod=0
         self.maxNum=100
         self.minNum=0
-        self.max_mix = 6
+        self.max_mix = 5
         self.isInTest=False
         self.initUI()
 
@@ -435,18 +435,8 @@ class Window(QMainWindow):
                     self.generateAQuestion()
         elif self.testType == 4:
             print(self.testType)
-            num_mix = random.randint(3, self.max_mix)
-            print(num_mix)
-            mid_res = None
-            while True:
-                try:
-                    mid_res = gene_express(num_mix)
-                except:
-                    mid_res = None
-                if mid_res is not None:
-                    break
-            res = mid_res[2]
-            text = mid_res[0] + "="         
+            num_op = random.randint(2, self.max_mix)
+            text, res = gene_express(num_op)
             
         else:
             raise NotImplementedError("加减法和乘法表之外的出题方式尚未实现")
